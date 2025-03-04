@@ -16,7 +16,8 @@ set -xe
 
 export NCCL_ASYNC_ERROR_HANDLING=1
 
-srun --wait=60 --kill-on-bad-exit=1 accelerate launch --config_file=configs/accelerate-configs/ds.yaml accelerate_train.py \
+srun --wait=60 --kill-on-bad-exit=1 accelerate launch \
+    --config_file=configs/accelerate-configs/ds.yaml train.py \
     --config=configs/training-configs/config.yaml
 
 echo "END TIME: $(date)"

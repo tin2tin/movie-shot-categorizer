@@ -1,22 +1,25 @@
 from transformers import AutoModelForCausalLM, AutoProcessor
 import torch
 from PIL import Image
-import requests
+import argparse
 
 
-folder_path = "..."
-model = (
-    AutoModelForCausalLM.from_pretrained(folder_path, torch_dtype=torch.float16, trust_remote_code=True)
-    .to("cuda")
-    .eval()
-)
-processor = AutoProcessor.from_pretrained(folder_path, trust_remote_code=True)
+def load(repo_id):
+    model = (
+        AutoModelForCausalLM.from_pretrained(repo_id, torch_dtype=torch.float16, trust_remote_code=True)
+        .to("cuda")
+        .eval()
+    )
+    processor = AutoProcessor.from_pretrained(repo_id, trust_remote_code=True)
+    return model, processor
 
-prompts = ["<COLOR>", "<LIGHTING>", "<LIGHTING_TYPE>", "<COMPOSITION>"]
-url = "https://huggingface.co/datasets/sayakpaul/sample-datasets/resolve/main/shot_still.jpg"
-image = Image.open(requests.get(url, stream=True).raw)
 
-with torch.no_grad() and torch.inference_mode():
+@torch.no_grad()
+@torch.inference_mode()
+def infer(image_path, model, processor):
+    prompts = ["<COLOR>", "<LIGHTING>", "<LIGHTING_TYPE>", "<COMPOSITION>"]
+    image = Image.open(image_path)
+
     for prompt in prompts:
         inputs = processor(text=prompt, images=image, return_tensors="pt").to("cuda", torch.float16)
         generated_ids = model.generate(
@@ -32,3 +35,15 @@ with torch.no_grad() and torch.inference_mode():
             generated_text, task=prompt, image_size=(image.width, image.height)
         )
         print(parsed_answer)
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--image_path", type=str, help="Path to the image.")
+    parser.add_argument(
+        "--repo_id", type=str, default="diffusers-internal-dev/shot-categorizer-v0", help="Path to the image."
+    )
+    args = parser.parse_args()
+
+    model, processor = load(repo_id=args.repo_id)
+    infer(image_path=args.image_path, model=model, processor=processor)

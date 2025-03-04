@@ -3,10 +3,10 @@ import accelerate
 
 
 NONE_KEY_MAP = {
-    "Color": ["no_color"],
-    "Lighting": ["no_lighting"],
-    "Lighting Type": ["no_ligting_type"],
-    "Composition": ["no_composition"],
+    "COLOR": ["no_color"],
+    "LIGHTING": ["no_lighting"],
+    "LIGHTING_TYPE": ["no_ligting_type"],
+    "COMPOSITION": ["no_composition"],
 }
 
 
@@ -55,7 +55,7 @@ def preprocess_batch(rows):
     return rows
 
 
-def get_dataset(accelerator=None, dataset_id="diffusers-internal-dev/ShotDEAD-5000", cache_dir=None, num_proc=4):
+def get_dataset(accelerator=None, dataset_id=None, cache_dir=None, num_proc=4):
     if accelerator is None:
         accelerator = accelerate.PartialState()
 
