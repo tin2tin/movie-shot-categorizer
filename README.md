@@ -1,8 +1,8 @@
 # Shot Categorizer 🎬
 
 <div align="center">
-  <img src="https://huggingface.co/diffusers/shot-categorizer-v0/resolve/main/assets/header.jpg"/>
-</div>
+  <img src="https://huggingface.co/diffusers/shot-categorizer-v0/resolve/main/assets/header.jpg" width=600/>
+</div><br>
 
 Contains fine-tuning and inference code for a shot categorizer model. We fine-tuned the model on
 the [microsoft/Florence-2-large](https://huggingface.co/microsoft/Florence-2-large) and the
