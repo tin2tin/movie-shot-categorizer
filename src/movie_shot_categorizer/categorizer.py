@@ -7,8 +7,6 @@ class ShotCategorizer:
         """
         Initializes the ShotCategorizer with a specified model repository.
         """
-        # Load the model from the specified repository ID
-        # Note: trust_remote_code=True is necessary for Florence-2 models
         self.model = (
             AutoModelForCausalLM.from_pretrained(repo_id, torch_dtype=torch.float16, trust_remote_code=True)
             .to("cuda")
@@ -24,11 +22,7 @@ class ShotCategorizer:
         """
         prompt = "<CAPTION>"
         image = Image.open(image_path)
-
-        # Process the image and prompt
         inputs = self.processor(text=prompt, images=image, return_tensors="pt").to("cuda", torch.float16)
-
-        # Generate the text
         generated_ids = self.model.generate(
             input_ids=inputs["input_ids"],
             pixel_values=inputs["pixel_values"],
@@ -38,15 +32,10 @@ class ShotCategorizer:
             num_beams=3,
         )
         generated_text = self.processor.batch_decode(generated_ids, skip_special_tokens=False)[0]
-
-        # Clean up the output using the processor's post-processing function
         parsed_answer = self.processor.post_process_generation(
             generated_text, task=prompt, image_size=(image.width, image.height)
         )
-
-        # Return the description string
         return parsed_answer.get(prompt)
-
 
     @torch.no_grad()
     @torch.inference_mode()
@@ -57,7 +46,6 @@ class ShotCategorizer:
         prompts = ["<COLOR>", "<LIGHTING>", "<LIGHTING_TYPE>", "<COMPOSITION>"]
         image = Image.open(image_path)
         results = {}
-
         for prompt in prompts:
             inputs = self.processor(text=prompt, images=image, return_tensors="pt").to("cuda", torch.float16)
             generated_ids = self.model.generate(
@@ -72,7 +60,27 @@ class ShotCategorizer:
             parsed_answer = self.processor.post_process_generation(
                 generated_text, task=prompt, image_size=(image.width, image.height)
             )
-            # Use the prompt without <> and in lowercase as the key
             results[prompt.strip('<>').lower()] = parsed_answer[prompt]
-
         return results
+
+    def generate_prompt(self, image_path):
+        """
+        Analyzes an image and generates a single, consolidated prompt
+        by combining its description and cinematic categories.
+        """
+        # Step 1: Get the base description and cinematic categories.
+        description = self.describe(image_path)
+        categories = self.categorize(image_path)
+
+        # Step 2: Format the data into a high-quality, readable prompt.
+        # Start with the main description, ensuring it's a complete sentence.
+        prompt = description.capitalize()
+        if not prompt.endswith('.'):
+            prompt += '.'
+
+        # Append the cinematic details in a structured and descriptive way.
+        prompt += f" This is a {categories['composition']} composition."
+        prompt += f" The scene uses {categories['lighting']} and {categories['lighting_type']}."
+        prompt += f" The color palette is primarily {categories['color']}."
+
+        return prompt
