@@ -22,7 +22,9 @@ dependencies = [
     "torch",
     "Pillow",
     "accelerate>=1.0.0",
-    "timm"
+    "timm",
+    "scikit-learn",
+    "numpy==1.26.4",
 ]
 
 [project.urls]
