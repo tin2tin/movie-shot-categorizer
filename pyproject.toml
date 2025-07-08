@@ -17,6 +17,7 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 dependencies = [
+    "huggingface_hub[hf_xet]",
     "transformers>=4.49.0",
     "torch",
     "Pillow",
