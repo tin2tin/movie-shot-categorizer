@@ -38,6 +38,33 @@ python inference.py --image_path=<PATH_TO_AN_IMAGE>
 
 Additionally, you can run the `accuracy.py` script to compute aggregate metrics on the indvidual sgot categories on your dataset.
 
+## Python Lib Installation
+
+You can install the library directly from the GitHub repository:
+
+
+```bash
+pip install git+https://github.com/your-username/movie-shot-categorizer.git
+```
+
+## Use the API 
+
+Now you can use the library in your Python code:
+
+```python
+from movie_shot_categorizer import ShotCategorizer
+
+# Initialize the categorizer
+categorizer = ShotCategorizer()
+
+# Categorize an image
+image_path = "path/to/your/image.jpg" # Replace with the actual image path
+categories = categorizer.categorize(image_path)
+
+# Print the results
+print(categories)
+```
+
 ## Acknowledgement
 
 Thanks to [this blog post](https://huggingface.co/blog/finetune-florence2) on fine-tuning Florence-2.
