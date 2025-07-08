@@ -36,7 +36,7 @@ We provide a SLURM configuration in the `run.slurm` file.
 python inference.py --image_path=<PATH_TO_AN_IMAGE>
 ```
 
-Additionally, you can run the `accuracy.py` script to compute aggregate metrics on the indvidual sgot categories on your dataset.
+Additionally, you can run the `accuracy.py` script to compute aggregate metrics on the individual shot categories on your dataset.
 
 ## Python Lib Installation
 
@@ -44,7 +44,7 @@ You can install the library directly from the GitHub repository:
 
 
 ```bash
-pip install git+https://github.com/your-username/movie-shot-categorizer.git
+pip install git+https://github.com/tin2tin/movie-shot-categorizer.git
 ```
 
 ## Use the API 
