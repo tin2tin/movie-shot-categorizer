@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
     "huggingface_hub[hf_xet]",
-    "transformers==4.41.2",
+    "transformers==4.51.3",
     "torch",
     "Pillow",
     "accelerate>=1.0.0",
