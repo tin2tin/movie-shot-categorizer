@@ -1,1 +1,0 @@
-from .categorizer import ShotCategorizer
